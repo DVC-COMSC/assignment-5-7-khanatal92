@@ -9,7 +9,11 @@ int main()
 	cin >> n1 >> n2;
 	cin >> N;
 
-	/***************************************************
-	 * Code your program here
-	 **************************************************	*/
-}
+	cout << "Enter the first initial value: ";
+	cin >> n1;
+	cout << "Enter the second initial value: ";
+	cin >> n2;
+
+	cout << "Enter the number of sequences (N > 2): ";
+	cin >> N;
+	

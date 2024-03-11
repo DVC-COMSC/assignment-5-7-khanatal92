@@ -1,0 +1,45 @@
+name: Autograding Tests
+'on':
+- push
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: IO1
+      id: io1
+      uses: education/autograding-io-grader@v1
+      with:
+        test-name: IO1
+        command: g++ -std=c++11 main.cpp && ./a.out
+        input: 5 8 3
+        expected-output: "[\\w,\\W]*5[\\w,\\W]*8[\\w,\\W]*13[\\w,\\W]*"
+        comparison-method: regex
+        timeout: 10
+        max-score: 10
+    - name: IO2
+      id: io2
+      uses: education/autograding-io-grader@v1
+      with:
+        test-name: IO2
+        command: g++ -std=c++11 main.cpp && ./a.out
+        input: 5 10 5
+        expected-output: "[\\w,\\W]*5[\\w,\\W]*10[\\w,\\W]*15[\\w,\\W]*25[\\w,\\W]*40[\\w,\\W]*"
+        comparison-method: regex
+        timeout: 10
+        max-score: 10
+    - name: Autograding Reporter
+      uses: education/autograding-grading-reporter@v1
+      env:
+        IO1_RESULTS: "${{steps.io1.outputs.result}}"
+        IO2_RESULTS: "${{steps.io2.outputs.result}}"
+      with:
+        runners: io1,io2
